@@ -18,10 +18,15 @@ def main() -> None:
     line = LINE.strip()
     assert 1 <= len(line) <= 200, "entry must be 1 to 200 characters, got %d" % len(line)
     assert "\n" not in line, "entry must be a single line"
+    assert line.endswith("."), "entry must end with a period"
     out_dir = os.environ.get("OUTPUT_DIR", "/output")
     os.makedirs(out_dir, exist_ok=True)
-    with open(os.path.join(out_dir, "entry.txt"), "w", encoding="utf-8") as f:
+    path = os.path.join(out_dir, "entry.txt")
+    with open(path, "w", encoding="utf-8") as f:
         f.write(line)
+    with open(path, encoding="utf-8") as f:
+        written = f.read()
+    assert written == line, "read-back mismatch: file differs from entry"
 
 
 if __name__ == "__main__":
